@@ -12,6 +12,7 @@ import source from "vinyl-source-stream";
 import buffer from "vinyl-buffer";
 import ghPages from "gulp-gh-pages";
 import GulpImage from "gulp-image";
+import htmlmin from "gulp-htmlmin";
 
 const scss = gsass(sass);
 
@@ -48,7 +49,10 @@ const routes = {
 const clean = async () => await deleteSync(["build"]);
 
 const buildHtml = () =>
-  gulp.src(routes.html.src).pipe(gulp.dest(routes.html.dest));
+  gulp
+    .src(routes.html.src)
+    .pipe(htmlmin({ collapseWhitespace: true }))
+    .pipe(gulp.dest(routes.html.dest));
 
 const buildPug = () =>
   gulp.src(routes.pug.src).pipe(gpug()).pipe(gulp.dest(routes.pug.dest));
@@ -89,7 +93,8 @@ const buildImg = () =>
   gulp.src(routes.img.src).pipe(GulpImage()).pipe(gulp.dest(routes.img.dest));
 
 const watch = () => {
-  gulp.watch(routes.pug.watch, buildPug);
+  gulp.watch(routes.html.watch, buildHtml);
+  /* gulp.watch(routes.pug.watch, buildPug); */
   gulp.watch(routes.scss.watch, buildScss);
   gulp.watch(routes.js.watch, buildJs);
 };
