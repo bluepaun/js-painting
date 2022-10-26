@@ -6,17 +6,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="css/style.css" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css" /> -->
+  <!-- <script defer src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script> -->
   <script defer src="js/app.js"></script>
 </head>
 
 <body>
-  <canvas></canvas>
-  <input type="range" value="5" min="1" max="10" />
-  <input type="color" />
-  <div class="palette"></div>
-  <input type="file" accept="image/*" />
-  <input type="text" placeholder="write and double click" />
-  <button id="save">save image</button>
+  <div class="draw-box">
+    <canvas></canvas>
+  </div>
+  <div class="brush box-shadow">
+    <span>brush</span>
+    <input type="range" value="5" min="1" max="10" />
+    <button class="btn-style">eraser</button>
+    <input type="color" />
+    <div class="palette"></div>
+  </div>
+
+  <div class="functions box-shadow">
+    <label for="image-input" class="btn-style">Image</label>
+    <input id="image-input" type="file" accept="image/*" />
+    <button class="btn-style" id="text-btn">Text</button>
+    <button class="btn-style" id="fill-btn">Fill</button>
+    <button class="btn-style" id="clear-btn">Clear</button>
+  </div>
+
+  <div class="configuration box-shadow">
+    <form>
+      <h3>canvas size</h3>
+      <input type="number" id="canvas-width" placeholder="width" required step="1" min="1" class="input-style" />
+      <span>x</span>
+      <input type="number" id="canvas-height" placeholder="heigth" required class="input-style" step="1" min="1" />
+      <button class="btn-style" type="">change</button>
+    </form>
+    <form>
+      <input type="text" placeholder="file name" required class="input-style" />
+      <button class="btn-style" id="save">save image</button>
+    </form>
+  </div>
 </body>
 
 </html>
