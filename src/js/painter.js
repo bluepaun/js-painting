@@ -67,10 +67,10 @@ canvas.addEventListener("mousemove", (event) => {
 });
 
 function dragFinish() {
-  dragging = false;
-  if (isFilling) {
+  if (dragging && isFilling) {
     ctx.fill();
   }
+  dragging = false;
 }
 
 canvas.addEventListener("mouseleave", dragFinish);
