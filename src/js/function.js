@@ -3,11 +3,12 @@ const imageInput = funcBox.querySelector("#image-input");
 const textBtn = funcBox.querySelector("#text-btn");
 const fillBtn = funcBox.querySelector("#fill-btn");
 const clearBtn = funcBox.querySelector("#clear-btn");
+const fontSizeInput = funcBox.querySelector("#font-size");
 
 const callbacks = {
   enableFill: (on) => {},
   clearAll: () => {},
-  inputText: () => {},
+  inputText: (size) => {},
   inputImage: (img) => {},
 };
 
@@ -40,7 +41,7 @@ imageInput.addEventListener("change", (e) => {
 });
 
 textBtn.addEventListener("click", (e) => {
-  callbacks.inputText();
+  callbacks.inputText(parseInt(fontSizeInput.value));
 });
 
 export default {

@@ -8,8 +8,6 @@ const filenameInput = saveForm.querySelector("input");
 const DEFAULT_WIDTH = 600;
 const DEFAULT_HEIGHT = 600;
 
-console.log(sizeForm);
-
 widthInput.value = DEFAULT_WIDTH;
 heightInput.value = DEFAULT_HEIGHT;
 
@@ -20,7 +18,6 @@ const callbacks = {
 
 sizeForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  console.log("submit");
   callbacks.setCanvasSize(widthInput.value, heightInput.value);
 });
 

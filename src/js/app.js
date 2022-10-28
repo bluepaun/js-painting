@@ -11,19 +11,6 @@ function initalize() {
 
 initalize();
 
-/* canvas.addEventListener("dblclick", (event) => { */
-/*   const { offsetX, offsetY } = event; */
-/*   const text = textInput.value; */
-/*   if (text === "") { */
-/*     return; */
-/*   } */
-/*   ctx.save(); */
-/*   ctx.lineWidth = 1; */
-/*   ctx.font = "48px 'Press Start 2P'"; */
-/*   ctx.fillText(text, offsetX, offsetY); */
-/*   ctx.restore(); */
-/* }); */
-
 configBox.setCallback("setCanvasSize", (width, height) => {
   painter.setCanvasSize(width, height);
 });
@@ -56,6 +43,6 @@ funcBox.setCallback("inputImage", (img) => {
   painter.setImage(img);
 });
 
-funcBox.setCallback("inputText", () => {
-  painter.setText();
+funcBox.setCallback("inputText", (size) => {
+  painter.setText(size);
 });
