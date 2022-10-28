@@ -12,20 +12,6 @@ function initalize() {
   _painter.default.setBurshWidth(5);
 }
 initalize();
-
-/* canvas.addEventListener("dblclick", (event) => { */
-/*   const { offsetX, offsetY } = event; */
-/*   const text = textInput.value; */
-/*   if (text === "") { */
-/*     return; */
-/*   } */
-/*   ctx.save(); */
-/*   ctx.lineWidth = 1; */
-/*   ctx.font = "48px 'Press Start 2P'"; */
-/*   ctx.fillText(text, offsetX, offsetY); */
-/*   ctx.restore(); */
-/* }); */
-
 _configuration.default.setCallback("setCanvasSize", (width, height) => {
   _painter.default.setCanvasSize(width, height);
 });
@@ -50,8 +36,8 @@ _function.default.setCallback("clearAll", () => {
 _function.default.setCallback("inputImage", img => {
   _painter.default.setImage(img);
 });
-_function.default.setCallback("inputText", () => {
-  _painter.default.setText();
+_function.default.setCallback("inputText", size => {
+  _painter.default.setText(size);
 });
 
 },{"./brush.js":2,"./configuration.js":3,"./function.js":4,"./painter.js":5}],2:[function(require,module,exports){
@@ -125,7 +111,6 @@ const saveForm = configBox.querySelector("form:last-child");
 const filenameInput = saveForm.querySelector("input");
 const DEFAULT_WIDTH = 600;
 const DEFAULT_HEIGHT = 600;
-console.log(sizeForm);
 widthInput.value = DEFAULT_WIDTH;
 heightInput.value = DEFAULT_HEIGHT;
 const callbacks = {
@@ -134,7 +119,6 @@ const callbacks = {
 };
 sizeForm.addEventListener("submit", event => {
   event.preventDefault();
-  console.log("submit");
   callbacks.setCanvasSize(widthInput.value, heightInput.value);
 });
 saveForm.addEventListener("submit", event => {
@@ -166,10 +150,11 @@ const imageInput = funcBox.querySelector("#image-input");
 const textBtn = funcBox.querySelector("#text-btn");
 const fillBtn = funcBox.querySelector("#fill-btn");
 const clearBtn = funcBox.querySelector("#clear-btn");
+const fontSizeInput = funcBox.querySelector("#font-size");
 const callbacks = {
   enableFill: on => {},
   clearAll: () => {},
-  inputText: () => {},
+  inputText: size => {},
   inputImage: img => {}
 };
 let isFill = false;
@@ -197,7 +182,7 @@ imageInput.addEventListener("change", e => {
   };
 });
 textBtn.addEventListener("click", e => {
-  callbacks.inputText();
+  callbacks.inputText(parseInt(fontSizeInput.value));
 });
 var _default = {
   setCallback: (name, func) => {
@@ -221,12 +206,41 @@ let dragging = false;
 let isFilling = false;
 let isTexting = false;
 let textForm = null;
+let fontSize = 0.1;
+function getTextWidth(text, font) {
+  // re-use canvas object for better performance
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+  const context = canvas.getContext("2d");
+  context.font = font;
+  const metrics = context.measureText(text);
+  return metrics.width;
+}
+
+/* function getCssStyle(element, prop) { */
+/*   return window.getComputedStyle(element, null).getPropertyValue(prop); */
+/* } */
+/**/
+/* function getCanvasFont(el = document.body) { */
+/*   const fontWeight = getCssStyle(el, "font-weight") || "normal"; */
+/*   const fontSize = getCssStyle(el, "font-size") || "16px"; */
+/*   const fontFamily = getCssStyle(el, "font-family") || "Times New Roman"; */
+/**/
+/*   return `${fontWeight} ${fontSize} ${fontFamily}`; */
+/* } */
+
+/* console.log(getTextWidth("hello there!", "bold 12pt arial"));  // close to 86 */
+
 function createTextInput(x, y) {
   const form = document.createElement("form");
   const input = document.createElement("input");
   input.setAttribute("type", "text");
   input.setAttribute("required", true);
   input.style.color = ctx.fillStyle;
+  input.style.fontSize = `${fontSize}px`;
+  input.addEventListener("input", e => {
+    const fontWidthPx = getTextWidth(e.target.value, `${fontSize}px Noto Sans`);
+    e.target.style.width = `${fontWidthPx}px`;
+  });
   form.appendChild(input);
   form.setAttribute("style", `top:${y}px; left:${x}px;`);
   drawBox.appendChild(form);
@@ -240,11 +254,10 @@ function createTextInput(x, y) {
     if (text !== "") {
       ctx.save();
       ctx.lineWidth = 1;
-      ctx.font = "48px 'Noto Sans'";
-      ctx.fillText(text, x, y + 48);
+      ctx.font = `${fontSize}px 'Noto Sans'`;
+      ctx.fillText(text, x, y + fontSize);
       ctx.restore();
     }
-    console.log(text);
     isTexting = false;
     textForm = null;
     target.remove();
@@ -290,7 +303,6 @@ canvas.addEventListener("mouseleave", dragFinish);
 canvas.addEventListener("mouseup", dragFinish);
 var _default = {
   setCanvasSize: (width, height) => {
-    console.log(width, height);
     drawBox.setAttribute("style", `width:${width}px; height:${height}px;`);
     canvas.width = width;
     canvas.height = height;
@@ -328,7 +340,8 @@ var _default = {
   setImage: img => {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   },
-  setText: () => {
+  setText: size => {
+    fontSize = size;
     isTexting = true;
   }
 };
